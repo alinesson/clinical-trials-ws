@@ -1,0 +1,17 @@
+C:\inetpub\wwwroot\WS_CNMC\WS_CNMC\bin\WS_CNMC.dll.config
+C:\inetpub\wwwroot\WS_CNMC\WS_CNMC\bin\WS_CNMC.dll
+C:\inetpub\wwwroot\WS_CNMC\WS_CNMC\bin\WS_CNMC.pdb
+C:\inetpub\wwwroot\WS_CNMC\WS_CNMC\bin\Newtonsoft.Json.dll
+C:\inetpub\wwwroot\WS_CNMC\WS_CNMC\bin\Mono.Security.dll
+C:\inetpub\wwwroot\WS_CNMC\WS_CNMC\obj\Debug\ClinicalTrials_WS.csproj.CoreCompileInputs.cache
+C:\inetpub\wwwroot\WS_CNMC\WS_CNMC\obj\Debug\WS_CNMC.dll
+C:\inetpub\wwwroot\WS_CNMC\WS_CNMC\obj\Debug\WS_CNMC.pdb
+C:\inetpub\wwwroot\ClinicalTrials_WS\ClinicalTrials_WS\bin\WS_CNMC.dll.config
+C:\inetpub\wwwroot\ClinicalTrials_WS\ClinicalTrials_WS\bin\WS_CNMC.dll
+C:\inetpub\wwwroot\ClinicalTrials_WS\ClinicalTrials_WS\bin\WS_CNMC.pdb
+C:\inetpub\wwwroot\ClinicalTrials_WS\ClinicalTrials_WS\bin\Newtonsoft.Json.dll
+C:\inetpub\wwwroot\ClinicalTrials_WS\ClinicalTrials_WS\bin\Mono.Security.dll
+C:\inetpub\wwwroot\ClinicalTrials_WS\ClinicalTrials_WS\obj\Debug\ClinicalTrials_WS.csprojResolveAssemblyReference.cache
+C:\inetpub\wwwroot\ClinicalTrials_WS\ClinicalTrials_WS\obj\Debug\ClinicalTrials_WS.csproj.CoreCompileInputs.cache
+C:\inetpub\wwwroot\ClinicalTrials_WS\ClinicalTrials_WS\obj\Debug\WS_CNMC.dll
+C:\inetpub\wwwroot\ClinicalTrials_WS\ClinicalTrials_WS\obj\Debug\WS_CNMC.pdb
