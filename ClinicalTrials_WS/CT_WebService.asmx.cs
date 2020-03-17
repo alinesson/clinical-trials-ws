@@ -887,52 +887,57 @@ namespace CT_WS
             {
                 string query = "";
 
-                query = "SELECT DISTINCT bc.MESH_TERM as value    " + " " +
-                        "FROM	studies s   " + " " +
-                        "        INNER JOIN facilities f ON s.nct_id=f.nct_id   " + " " +
-                        "        INNER JOIN browse_conditions bc ON s.nct_id=bc.nct_id   " + " " +
-                        "        INNER JOIN sponsors sp ON s.nct_id = sp.nct_id  " + " " +
+                query = "SELECT DISTINCT value " +
+                        "FROM   (" +
+                            "SELECT DISTINCT UPPER(bc.MESH_TERM) as value    " + " " +
+                            "FROM	studies s   " + " " +
+                            "        INNER JOIN facilities f ON s.nct_id=f.nct_id   " + " " +
+                            "        INNER JOIN browse_conditions bc ON s.nct_id=bc.nct_id   " + " " +
+                            "        INNER JOIN sponsors sp ON s.nct_id = sp.nct_id  " + " " +
 
-                        "WHERE 	f.country='United States' " + " " +
-                                "AND LOWER(f.state) in ('district of columbia','maryland', 'virginia') " + " " +
-                                "AND (s.completion_date IS NULL OR s.completion_date > CURRENT_DATE) " + " " +
-                                "AND ((LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%national%') " + " " +
-                                    "OR (LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%research%' AND LOWER(f.name) LIKE '%institute%') " + " " +
-                                    "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%national%') " + " " +
-                                    "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%research%' AND LOWER(sp.name) LIKE '%institute%')) " + " " +
+                            "WHERE 	f.country='United States' " + " " +
+                                    "AND LOWER(f.state) in ('district of columbia','maryland', 'virginia') " + " " +
+                                    "AND (s.completion_date IS NULL OR s.completion_date > CURRENT_DATE) " + " " +
+                                    "AND ((LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%national%') " + " " +
+                                        "OR (LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%research%' AND LOWER(f.name) LIKE '%institute%') " + " " +
+                                        "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%national%') " + " " +
+                                        "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%research%' AND LOWER(sp.name) LIKE '%institute%')) " + " " +
 
-                                //"AND f.status in ('Enrolling by invitation','Not yet recruiting','Recruiting') " + " " +
-                                "AND s.overall_status in ('Active, not recruiting', 'Approved for marketing', 'Available', 'Enrolling by invitation', 'Recruiting') " + " " +
-                        "UNION ALL   " + " " +
-                        "SELECT DISTINCT bi.MESH_TERM as value    " + " " +
-                        "FROM	studies s   " + " " +
-                        "        INNER JOIN facilities f ON s.nct_id=f.nct_id   " + " " +
-                        "        INNER JOIN browse_interventions bi ON s.nct_id=bi.nct_id   " + " " +
-                        "        INNER JOIN sponsors sp ON s.nct_id = sp.nct_id  " + " " +
-                        "WHERE 	f.country='United States' " + " " +
-                                "AND LOWER(f.state) in ('district of columbia','maryland', 'virginia') " + " " +
-                                "AND (s.completion_date IS NULL OR s.completion_date > CURRENT_DATE) " + " " +
-                                "AND ((LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%national%') " + " " +
-                                    "OR (LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%research%' AND LOWER(f.name) LIKE '%institute%') " + " " +
-                                    "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%national%') " + " " +
-                                    "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%research%' AND LOWER(sp.name) LIKE '%institute%')) " + " " +
-                                //"AND f.status in ('Enrolling by invitation','Not yet recruiting','Recruiting') " + " " +
-                                "AND s.overall_status in ('Active, not recruiting', 'Approved for marketing', 'Available', 'Enrolling by invitation', 'Recruiting') " + " " +
-                        "UNION ALL   " + " " +
-                        "SELECT DISTINCT k.name as value    " + " " +
-                        "FROM	studies s   " + " " +
-                        "        INNER JOIN facilities f ON s.nct_id=f.nct_id   " + " " +
-                        "        INNER JOIN keywords k ON s.nct_id=k.nct_id    " + " " +
-                        "        INNER JOIN sponsors sp ON s.nct_id = sp.nct_id  " + " " +
-                        "WHERE 	f.country='United States' " + " " +
-                                "AND LOWER(f.state) in ('district of columbia','maryland', 'virginia') " + " " +
-                                "AND (s.completion_date IS NULL OR s.completion_date > CURRENT_DATE) " + " " +
-                                "AND ((LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%national%') " + " " +
-                                    "OR (LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%research%' AND LOWER(f.name) LIKE '%institute%') " + " " +
-                                    "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%national%') " + " " +
-                                    "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%research%' AND LOWER(sp.name) LIKE '%institute%')) " + " " +
-                                //"AND f.status in ('Enrolling by invitation','Not yet recruiting','Recruiting') " + " " +
-                                "AND s.overall_status in ('Active, not recruiting', 'Approved for marketing', 'Available', 'Enrolling by invitation', 'Recruiting') ";
+                                    //"AND f.status in ('Enrolling by invitation','Not yet recruiting','Recruiting') " + " " +
+                                    "AND s.overall_status in ('Active, not recruiting', 'Approved for marketing', 'Available', 'Enrolling by invitation', 'Recruiting') " + " " +
+                            "UNION ALL   " + " " +
+                            "SELECT DISTINCT UPPER(bi.MESH_TERM) as value    " + " " +
+                            "FROM	studies s   " + " " +
+                            "        INNER JOIN facilities f ON s.nct_id=f.nct_id   " + " " +
+                            "        INNER JOIN browse_interventions bi ON s.nct_id=bi.nct_id   " + " " +
+                            "        INNER JOIN sponsors sp ON s.nct_id = sp.nct_id  " + " " +
+                            "WHERE 	f.country='United States' " + " " +
+                                    "AND LOWER(f.state) in ('district of columbia','maryland', 'virginia') " + " " +
+                                    "AND (s.completion_date IS NULL OR s.completion_date > CURRENT_DATE) " + " " +
+                                    "AND ((LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%national%') " + " " +
+                                        "OR (LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%research%' AND LOWER(f.name) LIKE '%institute%') " + " " +
+                                        "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%national%') " + " " +
+                                        "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%research%' AND LOWER(sp.name) LIKE '%institute%')) " + " " +
+                                    //"AND f.status in ('Enrolling by invitation','Not yet recruiting','Recruiting') " + " " +
+                                    "AND s.overall_status in ('Active, not recruiting', 'Approved for marketing', 'Available', 'Enrolling by invitation', 'Recruiting') " + " " +
+                            "UNION ALL   " + " " +
+                            "SELECT DISTINCT UPPER(k.name) as value    " + " " +
+                            "FROM	studies s   " + " " +
+                            "        INNER JOIN facilities f ON s.nct_id=f.nct_id   " + " " +
+                            "        INNER JOIN keywords k ON s.nct_id=k.nct_id    " + " " +
+                            "        INNER JOIN sponsors sp ON s.nct_id = sp.nct_id  " + " " +
+                            "WHERE 	f.country='United States' " + " " +
+                                    "AND LOWER(f.state) in ('district of columbia','maryland', 'virginia') " + " " +
+                                    "AND (s.completion_date IS NULL OR s.completion_date > CURRENT_DATE) " + " " +
+                                    "AND ((LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%national%') " + " " +
+                                        "OR (LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%research%' AND LOWER(f.name) LIKE '%institute%') " + " " +
+                                        "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%national%') " + " " +
+                                        "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%research%' AND LOWER(sp.name) LIKE '%institute%')) " + " " +
+                                    //"AND f.status in ('Enrolling by invitation','Not yet recruiting','Recruiting') " + " " +
+                                    "AND s.overall_status in ('Active, not recruiting', 'Approved for marketing', 'Available', 'Enrolling by invitation', 'Recruiting') " +
+                        ") as tbl " +
+                        "ORDER BY value"; 
+
 
                 string connstring = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4}",
                                 "aact-db.ctti-clinicaltrials.org", "5432", "webteam", "DrBear2018*", "aact");
@@ -1002,38 +1007,42 @@ namespace CT_WS
             {
                 string query = "";
 
-                query = "SELECT DISTINCT cc.name as value     " + " " +
-                        "FROM	studies s    " + " " +
-                        "        INNER JOIN facilities f ON s.nct_id=f.nct_id    " + " " +
-                        "        INNER JOIN central_contacts cc ON s.nct_id=cc.nct_id " + " " +
-                        "        INNER JOIN sponsors sp ON s.nct_id = sp.nct_id  " + " " +
-                        "WHERE 	f.country='United States' " + " " +
-                                "AND LOWER(f.state) in ('district of columbia','maryland', 'virginia') " + " " +
-                                "AND (s.completion_date IS NULL OR s.completion_date > CURRENT_DATE) " + " " +
-                                "AND ((LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%national%') " + " " +
-                                    "OR (LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%research%' AND LOWER(f.name) LIKE '%institute%') " + " " +
-                                    "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%national%') " + " " +
-                                    "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%research%' AND LOWER(sp.name) LIKE '%institute%')) " + " " +
-                                //"AND f.status in ('Enrolling by invitation','Not yet recruiting','Recruiting') " + " " +
-                                "AND s.overall_status in ('Active, not recruiting', 'Approved for marketing', 'Available', 'Enrolling by invitation', 'Recruiting') " + " " +
-                        "        AND NOT cc.name = ''   " + " " +
-                        "UNION ALL    " + " " +
-                        "SELECT DISTINCT fc.name as value     " + " " +
-                        "FROM	studies s    " + " " +
-                        "        INNER JOIN facilities f ON s.nct_id=f.nct_id    " + " " +
-                        "        INNER JOIN facility_contacts fc ON f.id=fc.facility_id 	   " + " " +
-                        "        INNER JOIN sponsors sp ON s.nct_id = sp.nct_id  " + " " +
-                        "WHERE 	f.country='United States' " + " " +
-                                "AND LOWER(f.state) in ('district of columbia','maryland', 'virginia') " + " " +
-                                "AND (s.completion_date IS NULL OR s.completion_date > CURRENT_DATE) " + " " +
-                                "AND ((LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%national%') " + " " +
-                                    "OR (LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%research%' AND LOWER(f.name) LIKE '%institute%') " + " " +
-                                    "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%national%') " + " " +
-                                    "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%research%' AND LOWER(sp.name) LIKE '%institute%')) " + " " +
+                query = "SELECT DISTINCT value " +
+                        "FROM   (" + 
+                            "SELECT DISTINCT cc.name as value     " + " " +
+                            "FROM	studies s    " + " " +
+                            "        INNER JOIN facilities f ON s.nct_id=f.nct_id    " + " " +
+                            "        INNER JOIN central_contacts cc ON s.nct_id=cc.nct_id " + " " +
+                            "        INNER JOIN sponsors sp ON s.nct_id = sp.nct_id  " + " " +
+                            "WHERE 	f.country='United States' " + " " +
+                                    "AND LOWER(f.state) in ('district of columbia','maryland', 'virginia') " + " " +
+                                    "AND (s.completion_date IS NULL OR s.completion_date > CURRENT_DATE) " + " " +
+                                    "AND ((LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%national%') " + " " +
+                                        "OR (LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%research%' AND LOWER(f.name) LIKE '%institute%') " + " " +
+                                        "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%national%') " + " " +
+                                        "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%research%' AND LOWER(sp.name) LIKE '%institute%')) " + " " +
+                                    //"AND f.status in ('Enrolling by invitation','Not yet recruiting','Recruiting') " + " " +
+                                    "AND s.overall_status in ('Active, not recruiting', 'Approved for marketing', 'Available', 'Enrolling by invitation', 'Recruiting') " + " " +
+                            "        AND NOT cc.name = ''   " + " " +
+                            "UNION ALL    " + " " +
+                            "SELECT DISTINCT fc.name as value     " + " " +
+                            "FROM	studies s    " + " " +
+                            "        INNER JOIN facilities f ON s.nct_id=f.nct_id    " + " " +
+                            "        INNER JOIN facility_contacts fc ON f.id=fc.facility_id 	   " + " " +
+                            "        INNER JOIN sponsors sp ON s.nct_id = sp.nct_id  " + " " +
+                            "WHERE 	f.country='United States' " + " " +
+                                    "AND LOWER(f.state) in ('district of columbia','maryland', 'virginia') " + " " +
+                                    "AND (s.completion_date IS NULL OR s.completion_date > CURRENT_DATE) " + " " +
+                                    "AND ((LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%national%') " + " " +
+                                        "OR (LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%research%' AND LOWER(f.name) LIKE '%institute%') " + " " +
+                                        "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%national%') " + " " +
+                                        "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%research%' AND LOWER(sp.name) LIKE '%institute%')) " + " " +
 
-                                //"AND f.status in ('Enrolling by invitation','Not yet recruiting','Recruiting') " + " " +
-                                "AND s.overall_status in ('Active, not recruiting', 'Approved for marketing', 'Available', 'Enrolling by invitation', 'Recruiting') " + " " +
-                        "        AND NOT fc.name = ''";
+                                    //"AND f.status in ('Enrolling by invitation','Not yet recruiting','Recruiting') " + " " +
+                                    "AND s.overall_status in ('Active, not recruiting', 'Approved for marketing', 'Available', 'Enrolling by invitation', 'Recruiting') " + " " +
+                            "        AND NOT fc.name = ''" +
+                        ") as tbl " +
+                        "ORDER BY value"; ;
 
                 string connstring = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4}",
                                 "aact-db.ctti-clinicaltrials.org", "5432", "webteam", "DrBear2018*", "aact");
@@ -1103,37 +1112,41 @@ namespace CT_WS
             {
                 string query = "";
 
-                query = "SELECT DISTINCT oo.name as value " +
-                        "FROM	studies s       " +
-                        "        INNER JOIN facilities f ON s.nct_id=f.nct_id       " +
-                        "        INNER JOIN overall_officials oo ON s.nct_id=oo.nct_id   " +
-                        "        INNER JOIN sponsors sp ON s.nct_id = sp.nct_id  " + " " +
-                        "WHERE 	f.country='United States'   " +
-                                "AND LOWER(f.state) in ('district of columbia','maryland', 'virginia') " + " " +
-                                "AND (s.completion_date IS NULL OR s.completion_date > CURRENT_DATE) " + " " +
-                                "AND ((LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%national%') " + " " +
-                                    "OR (LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%research%' AND LOWER(f.name) LIKE '%institute%') " + " " +
-                                    "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%national%') " + " " +
-                                    "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%research%' AND LOWER(sp.name) LIKE '%institute%')) " + " " +
-                                //"AND f.status in ('Enrolling by invitation','Not yet recruiting','Recruiting') " + " " +
-                                "AND s.overall_status in ('Active, not recruiting', 'Approved for marketing', 'Available', 'Enrolling by invitation', 'Recruiting') " + " " +
-                        "        AND NOT oo.name = ''      " +
-                        "UNION ALL  " +
-                        "SELECT DISTINCT fi.name as value        " +
-                        "FROM	studies s       " +
-                        "        INNER JOIN facilities f ON s.nct_id=f.nct_id       " +
-                        "        INNER JOIN facility_investigators fi ON s.nct_id=fi.nct_id       " +
-                        "        INNER JOIN sponsors sp ON s.nct_id = sp.nct_id  " + " " +
-                        "WHERE 	f.country='United States' " + " " +
-                                "AND LOWER(f.state) in ('district of columbia','maryland', 'virginia') " + " " +
-                                "AND (s.completion_date IS NULL OR s.completion_date > CURRENT_DATE) " + " " +
-                                "AND ((LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%national%') " + " " +
-                                    "OR (LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%research%' AND LOWER(f.name) LIKE '%institute%') " + " " +
-                                    "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%national%') " + " " +
-                                    "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%research%' AND LOWER(sp.name) LIKE '%institute%')) " + " " +
-                                //"AND f.status in ('Enrolling by invitation','Not yet recruiting','Recruiting') " + " " +
-                                "AND s.overall_status in ('Active, not recruiting', 'Approved for marketing', 'Available', 'Enrolling by invitation', 'Recruiting') " + " " +
-                        "        AND NOT fi.name = ''";
+                query = "SELECT DISTINCT value " +
+                        "FROM   (" +
+                            "SELECT DISTINCT oo.name as value " +
+                            "FROM	studies s       " +
+                            "        INNER JOIN facilities f ON s.nct_id=f.nct_id       " +
+                            "        INNER JOIN overall_officials oo ON s.nct_id=oo.nct_id   " +
+                            "        INNER JOIN sponsors sp ON s.nct_id = sp.nct_id  " + " " +
+                            "WHERE 	f.country='United States'   " +
+                                    "AND LOWER(f.state) in ('district of columbia','maryland', 'virginia') " + " " +
+                                    "AND (s.completion_date IS NULL OR s.completion_date > CURRENT_DATE) " + " " +
+                                    "AND ((LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%national%') " + " " +
+                                        "OR (LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%research%' AND LOWER(f.name) LIKE '%institute%') " + " " +
+                                        "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%national%') " + " " +
+                                        "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%research%' AND LOWER(sp.name) LIKE '%institute%')) " + " " +
+                                    //"AND f.status in ('Enrolling by invitation','Not yet recruiting','Recruiting') " + " " +
+                                    "AND s.overall_status in ('Active, not recruiting', 'Approved for marketing', 'Available', 'Enrolling by invitation', 'Recruiting') " + " " +
+                            "        AND NOT oo.name = ''      " +
+                            "UNION ALL  " +
+                            "SELECT DISTINCT fi.name as value        " +
+                            "FROM	studies s       " +
+                            "        INNER JOIN facilities f ON s.nct_id=f.nct_id       " +
+                            "        INNER JOIN facility_investigators fi ON s.nct_id=fi.nct_id       " +
+                            "        INNER JOIN sponsors sp ON s.nct_id = sp.nct_id  " + " " +
+                            "WHERE 	f.country='United States' " + " " +
+                                    "AND LOWER(f.state) in ('district of columbia','maryland', 'virginia') " + " " +
+                                    "AND (s.completion_date IS NULL OR s.completion_date > CURRENT_DATE) " + " " +
+                                    "AND ((LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%national%') " + " " +
+                                        "OR (LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%research%' AND LOWER(f.name) LIKE '%institute%') " + " " +
+                                        "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%national%') " + " " +
+                                        "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%research%' AND LOWER(sp.name) LIKE '%institute%')) " + " " +
+                                    //"AND f.status in ('Enrolling by invitation','Not yet recruiting','Recruiting') " + " " +
+                                    "AND s.overall_status in ('Active, not recruiting', 'Approved for marketing', 'Available', 'Enrolling by invitation', 'Recruiting') " + " " +
+                            "        AND NOT fi.name = ''" +
+                        ") as tbl " +
+                        "ORDER BY value";
 
                 string connstring = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4}",
                                 "aact-db.ctti-clinicaltrials.org", "5432", "webteam", "DrBear2018*", "aact");
