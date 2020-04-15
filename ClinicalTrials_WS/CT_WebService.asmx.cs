@@ -281,6 +281,75 @@ namespace CT_WS
 
         [ScriptMethod(UseHttpGet = true, ResponseFormat = ResponseFormat.Json)]
         [WebMethod]
+        public void GetFacilityContacts(string str)
+        {
+            //Verify str is passed
+            if (string.IsNullOrEmpty(str))
+            {
+                throw new Exception("NCT_ID missing");
+            }
+
+            str = str.ToUpper().Trim();
+            string JSONString = string.Empty;
+            string cacheKey = "GetFacilityContacts:" + str + ":" + DateTime.Now.ToShortDateString();
+
+            //Check cache
+            JSONString = Get<string>(cacheKey);
+
+            if (!string.IsNullOrEmpty(JSONString))
+            {
+                Context.Response.Clear();
+                Context.Response.ContentType = "application/json";
+                Context.Response.Write(JSONString);
+                return;
+            }
+
+            //String xml;
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            try
+            {
+                string query = "";
+
+                query = "SELECT DISTINCT name, phone, email FROM facility_contacts WHERE nct_id='" + str + "'";
+
+                string connstring = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4}",
+                                "aact-db.ctti-clinicaltrials.org", "5432", "webteam", "DrBear2018*", "aact");
+
+                // Making connection with Npgsql provider
+                NpgsqlConnection conn = new NpgsqlConnection(connstring);
+                conn.Open();
+                // data adapter making request from our connection
+                NpgsqlDataAdapter da = new NpgsqlDataAdapter(query, conn);
+
+                ds.Reset();
+                // filling DataSet with result from NpgsqlDataAdapter
+                da.Fill(ds);
+                // since it C# DataSet can handle multiple tables, we will select first
+                dt = ds.Tables[0];
+                // connect grid to DataTable
+
+                // since we only showing the result we don't need connection anymore
+                conn.Close();
+
+                JSONString = JsonConvert.SerializeObject(dt);
+
+                //Add to cache
+                AddItem(JSONString, cacheKey);
+
+                Context.Response.Clear();
+                Context.Response.ContentType = "application/json";
+
+                Context.Response.Write(JSONString);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [ScriptMethod(UseHttpGet = true, ResponseFormat = ResponseFormat.Json)]
+        [WebMethod]
         public void GetInvestigators(string str)
         {
             //Verify str is passed
