@@ -420,10 +420,118 @@ namespace CT_WS
 
         [ScriptMethod(UseHttpGet = true, ResponseFormat = ResponseFormat.Json)]
         [WebMethod]
-        public void SearchForNCT(string str)
+        public void GetSummaryListByNCTIDs(string str)
         {
             //Verify str is passed
             if (string.IsNullOrEmpty(str)){
+                throw new Exception("NCT_IDs missing");
+            }
+
+            str = str.ToUpper().Trim();
+            string JSONString = string.Empty;
+            string cacheKey = "GetSummaryListByNCTIDs:" + str.Replace("\"", string.Empty).Replace("\'", string.Empty).Replace(",", string.Empty) + ":" + DateTime.Now.ToShortDateString();
+
+            //Check cache
+            JSONString = Get<string>(cacheKey);
+
+            if (!string.IsNullOrEmpty(JSONString))
+            {
+                Context.Response.Clear();
+                Context.Response.ContentType = "application/json";
+                Context.Response.Write(JSONString);
+                return;
+            }
+
+            //String xml;
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            try
+            {
+                string query = "";
+
+                query = "SELECT DISTINCT   tbl.nct_id, " + " " +
+                                          "tbl.official_title,    " + " " +
+                                          "tbl.brief_title, " + " " +
+                                          "tbl.overall_status, " + " " +
+                                          "tbl.phase, " + " " +
+                                          "bs.description " + " " +
+                        "FROM   ( " + " " +
+                                    "SELECT DISTINCT s.nct_id,   " + " " +
+                                            "s.official_title,   " + " " +
+                                            "s.brief_title, " + " " +
+                                            "s.overall_status, " + " " +
+                                            "s.phase " + " " +
+                                    "FROM	studies s  " + " " +
+                                            "INNER JOIN facilities f ON s.nct_id=f.nct_id  " + " " +
+                                            "INNER JOIN sponsors sp ON s.nct_id = sp.nct_id  " + " " +
+                                    " WHERE 	f.country='United States' " + " " +
+                                            "AND LOWER(f.state) in ('district of columbia','maryland', 'virginia') " + " " +
+                                            "AND (s.completion_date IS NULL OR s.completion_date > CURRENT_DATE) " + " " +
+                                            "AND ((LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%national%') " + " " +
+                                                "OR (LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%research%' AND LOWER(f.name) LIKE '%institute%') " + " " +
+                                                "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%national%') " + " " +
+                                                "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%research%' AND LOWER(sp.name) LIKE '%institute%')) " + " " +
+                                            //"AND f.status in ('Enrolling by invitation','Not yet recruiting','Recruiting') " + " " +
+                                            "AND s.overall_status in ('Active, not recruiting', 'Approved for marketing', 'Available', 'Enrolling by invitation', 'Recruiting') " + " " +
+                                    "GROUP BY s.nct_id, " + " " +
+                                               "s.official_title, " + " " +
+                                               "s.brief_title,  " + " " +
+                                               "s.overall_status, " + " " +
+                                               "s.phase " + " " +
+                                ") tbl  " + " " +
+                        "LEFT JOIN brief_summaries bs ON tbl.nct_id=bs.nct_id  " + " " +
+                        "WHERE  (   " + " " +
+                                  "UPPER(TRIM(tbl.nct_id)) IN (" + str + ")	 " + " " +
+                                ")";
+
+                string connstring = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4}",
+                                "aact-db.ctti-clinicaltrials.org", "5432", "webteam", "DrBear2018*", "aact");
+
+                // Making connection with Npgsql provider
+                NpgsqlConnection conn = new NpgsqlConnection(connstring);
+                conn.Open();
+                // quite complex sql statement
+                // string sql = "SELECT  * FROM studies where official_title like '%" + str + "%' limit 10";
+                // data adapter making request from our connection
+
+                NpgsqlDataAdapter da = new NpgsqlDataAdapter(query, conn);
+
+                da.SelectCommand.CommandTimeout = 120 * 60;
+
+                ds.Reset();
+                // filling DataSet with result from NpgsqlDataAdapter
+                da.Fill(ds);
+                // since it C# DataSet can handle multiple tables, we will select first
+                dt = ds.Tables[0];
+                // connect grid to DataTable
+
+                // since we only showing the result we don't need connection anymore
+                conn.Close();
+
+                JSONString = JsonConvert.SerializeObject(dt);
+
+                //Add to cache
+                AddItem(JSONString, cacheKey);
+
+                Context.Response.Clear();
+                Context.Response.ContentType = "application/json";
+
+                Context.Response.Write(JSONString);
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [ScriptMethod(UseHttpGet = true, ResponseFormat = ResponseFormat.Json)]
+        [WebMethod]
+        public void SearchForNCT(string str)
+        {
+            //Verify str is passed
+            if (string.IsNullOrEmpty(str))
+            {
                 throw new Exception("NCT_ID missing");
             }
 
@@ -521,6 +629,7 @@ namespace CT_WS
                 throw e;
             }
         }
+
 
         [ScriptMethod(UseHttpGet = true, ResponseFormat = ResponseFormat.Json)]
         [WebMethod]
