@@ -311,7 +311,15 @@ namespace CT_WS
             {
                 string query = "";
 
-                query = "SELECT DISTINCT name, phone, email FROM facility_contacts WHERE nct_id='" + str + "'";
+                //query = "SELECT DISTINCT name, phone, email FROM facility_contacts WHERE nct_id='" + str + "'";
+                query = "SELECT DISTINCT fc.name, fc.phone, fc.email " + " " +
+                        "FROM 	facility_contacts fc  " + " " +
+                            "INNER JOIN facilities f ON f.id = fc.facility_id  " + " " +
+                        "WHERE  fc.nct_id = '" + str + "'  " + " " +
+                            "AND f.country = 'United States' " + " " +
+                            "AND Lower(f.state) IN ( 'district of columbia', 'maryland', 'virginia' ) " + " " +
+                            "AND ( ( Lower(f.NAME) LIKE '%children%' AND Lower(f.NAME) LIKE '%national%' ) " + " " +
+                                    "OR (Lower(f.NAME) LIKE '%children%' AND Lower(f.NAME) LIKE '%research%' AND Lower(f.NAME) LIKE '%institute%' ) )";
 
                 string connstring = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4}",
                                 "aact-db.ctti-clinicaltrials.org", "5432", "webteam", "DrBear2018*", "aact");
