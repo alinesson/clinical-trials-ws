@@ -109,13 +109,13 @@ namespace CT_WS
                                        "INNER JOIN facilities f ON std.nct_id = f.nct_id " + " " +
                                        "INNER JOIN sponsors sp ON std.nct_id = sp.nct_id  " + " " +
                                 "WHERE  std.nct_id = '" + str + "'  " + " " +
-                                       "AND f.country = 'United States' " + " " +
-                                       "AND Lower(f.state) IN ( 'district of columbia', 'maryland', 'virginia' ) " + " " +
+                                       //"AND f.country = 'United States' " + " " +
+                                       //"AND Lower(f.state) IN ( 'district of columbia', 'maryland', 'virginia' ) " + " " +
                                        "AND ( std.completion_date IS NULL OR std.completion_date > CURRENT_DATE ) " + " " +
-                                       "AND ( ( Lower(f.NAME) LIKE '%children%' AND Lower(f.NAME) LIKE '%national%' ) " + " " +
-                                              "OR (Lower(f.NAME) LIKE '%children%' AND Lower(f.NAME) LIKE '%research%' AND Lower(f.NAME) LIKE '%institute%' ) " + " " +
-                                              "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%national%')" + " " +
-                                              "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%research%' AND LOWER(sp.name) LIKE '%institute%') ) " + " " +
+                                       //"AND ( ( Lower(f.NAME) LIKE '%children%' AND Lower(f.NAME) LIKE '%national%' ) " + " " +
+                                       //       "OR (Lower(f.NAME) LIKE '%children%' AND Lower(f.NAME) LIKE '%research%' AND Lower(f.NAME) LIKE '%institute%' ) " + " " +
+                                       //       "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%national%')" + " " +
+                                       //       "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%research%' AND LOWER(sp.name) LIKE '%institute%') ) " + " " +
                                  "GROUP  BY std.nct_id, " + " " +
                                           "std.official_title, " + " " +
                                           "std.study_type, " + " " +
@@ -472,14 +472,7 @@ namespace CT_WS
                                     "FROM	studies s  " + " " +
                                             "INNER JOIN facilities f ON s.nct_id=f.nct_id  " + " " +
                                             "INNER JOIN sponsors sp ON s.nct_id = sp.nct_id  " + " " +
-                                    " WHERE 	f.country='United States' " + " " +
-                                            "AND LOWER(f.state) in ('district of columbia','maryland', 'virginia') " + " " +
-                                            "AND (s.completion_date IS NULL OR s.completion_date > CURRENT_DATE) " + " " +
-                                            "AND ((LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%national%') " + " " +
-                                                "OR (LOWER(f.name) LIKE '%children%' AND LOWER(f.name) LIKE '%research%' AND LOWER(f.name) LIKE '%institute%') " + " " +
-                                                "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%national%') " + " " +
-                                                "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%research%' AND LOWER(sp.name) LIKE '%institute%')) " + " " +
-                                            //"AND f.status in ('Enrolling by invitation','Not yet recruiting','Recruiting') " + " " +
+                                    "WHERE (s.completion_date IS NULL OR s.completion_date > CURRENT_DATE) " + " " +
                                             "AND s.overall_status in ('Active, not recruiting', 'Approved for marketing', 'Available', 'Enrolling by invitation', 'Recruiting') " + " " +
                                     "GROUP BY s.nct_id, " + " " +
                                                "s.official_title, " + " " +
