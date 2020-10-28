@@ -111,7 +111,7 @@ namespace CT_WS
                                 "WHERE  std.nct_id = '" + str + "'  " + " " +
                                        //"AND f.country = 'United States' " + " " +
                                        //"AND Lower(f.state) IN ( 'district of columbia', 'maryland', 'virginia' ) " + " " +
-                                       "AND ( std.completion_date IS NULL OR std.completion_date > CURRENT_DATE ) " + " " +
+                                       //"AND ( std.completion_date IS NULL OR std.completion_date > CURRENT_DATE ) " + " " +
                                        //"AND ( ( Lower(f.NAME) LIKE '%children%' AND Lower(f.NAME) LIKE '%national%' ) " + " " +
                                        //       "OR (Lower(f.NAME) LIKE '%children%' AND Lower(f.NAME) LIKE '%research%' AND Lower(f.NAME) LIKE '%institute%' ) " + " " +
                                        //       "OR (LOWER(sp.name) LIKE '%children%' AND LOWER(sp.name) LIKE '%national%')" + " " +
@@ -472,8 +472,8 @@ namespace CT_WS
                                     "FROM	studies s  " + " " +
                                             "INNER JOIN facilities f ON s.nct_id=f.nct_id  " + " " +
                                             "INNER JOIN sponsors sp ON s.nct_id = sp.nct_id  " + " " +
-                                    "WHERE (s.completion_date IS NULL OR s.completion_date > CURRENT_DATE) " + " " +
-                                            "AND s.overall_status in ('Active, not recruiting', 'Approved for marketing', 'Available', 'Enrolling by invitation', 'Recruiting') " + " " +
+                                    //"WHERE (s.completion_date IS NULL OR s.completion_date > CURRENT_DATE) " + " " +
+                                    //        "AND s.overall_status in ('Active, not recruiting', 'Approved for marketing', 'Available', 'Enrolling by invitation', 'Recruiting') " + " " +
                                     "GROUP BY s.nct_id, " + " " +
                                                "s.official_title, " + " " +
                                                "s.brief_title,  " + " " +
